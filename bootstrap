@@ -1,0 +1,22 @@
+#!/bin/bash
+
+path=`pwd`
+
+# 创建数据库
+python dbinit.py
+
+# 创建定时任务
+echo -e '\e[1;32m --===[ Create Job ]===-- \e[0m'
+
+crontab -l | { cat; echo "0 * * * * ${path}/job.sh"; } | crontab -
+
+# 启动web服务
+echo -e '\e[1;32m --===[ Clone web.py ]===-- \e[0m'
+git clone https://github.com/webpy/webpy.git
+ln -s `pwd`/webpy/web .
+
+echo -e '\e[1;32m --===[ Start Server ]===-- \e[0m'
+python server.py > log.txt 2>&1 &
+
+echo -e '\e[1;32m --===[ Work Done! ]===-- \e[0m'
+echo 'Open http://localhost:8080/status check sever status'
