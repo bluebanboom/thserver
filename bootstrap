@@ -5,14 +5,17 @@ path=`pwd`
 # 创建数据库
 python dbinit.py
 
+# 编译dht11
+echo -e '\e[1;32m --===[ Compile dht ]===-- \e[0m'
+gcc dht11.c gpio.c -std=gnu99 -o dht11
+
 # 创建定时任务
 echo -e '\e[1;32m --===[ Create Job ]===-- \e[0m'
 
 crontab -l | { cat; echo "0 * * * * ${path}/job.sh"; } | crontab -
 
 # 启动web服务
-echo -e '\e[1;32m --===[ Clone web.py ]===-- \e[0m'
-git clone https://github.com/webpy/webpy.git
+echo -e '\e[1;32m --===[ Config web.py ]===-- \e[0m'
 ln -s `pwd`/webpy/web .
 
 echo -e '\e[1;32m --===[ Start Server ]===-- \e[0m'
